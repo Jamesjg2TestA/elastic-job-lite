@@ -25,8 +25,14 @@ before_install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ];        then sed -i '' 's/<gib.enabled>true/<gib.enabled>false/'
   $TRAVIS_BUILD_DIR/pom.xml;        else sed -i 's/<gib.enabled>true/<gib.enabled>false/'
   $TRAVIS_BUILD_DIR/pom.xml;        fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ];        then sed -i '' 's/<gib.enabled>true/<gib.enabled>false/'
+  $TRAVIS_BUILD_DIR/pom.xml;        else sed -i 's/<gib.enabled>true/<gib.enabled>false/'
+  $TRAVIS_BUILD_DIR/pom.xml;        fi
 before_script:
 - echo "MAVEN_OPTS='-Xmx1024m -XX:MaxPermSize=256m'" > ~/.mavenrc
+- if [ "$TRAVIS_OS_NAME" == "osx" ];        then sed -i '' 's/<gib.enabled>false/<gib.enabled>true/'
+  $TRAVIS_BUILD_DIR/pom.xml;        else sed -i 's/<gib.enabled>false/<gib.enabled>true/'
+  $TRAVIS_BUILD_DIR/pom.xml;        fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ];        then sed -i '' 's/<gib.enabled>false/<gib.enabled>true/'
   $TRAVIS_BUILD_DIR/pom.xml;        else sed -i 's/<gib.enabled>false/<gib.enabled>true/'
   $TRAVIS_BUILD_DIR/pom.xml;        fi
@@ -61,6 +67,7 @@ cache:
   - $HOME/CACHE
   - $HOME/CACHE
   - $HOME/CACHE
+  - $HOME/CACHE
 env:
 - CACHE_MARK=1
 - CACHE_MARK=2
@@ -70,6 +77,7 @@ env:
 - CACHE_MARK=6
 - CACHE_MARK=7
 - CACHE_MARK=8
+- CACHE_MARK=9
 jdk:
 - oraclejdk8
 language: java
@@ -82,7 +90,10 @@ script:
 - touch /tmp/NOW;echo SCRIPT_START $(date)
 - touch /tmp/NOW;echo SCRIPT_START $(date)
 - touch /tmp/NOW;echo SCRIPT_START $(date)
+- touch /tmp/NOW;echo SCRIPT_START $(date)
 - mvn test -B
+- echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
+  -name TEST-*.xml -newer /tmp/NOW | wc -l))
 - echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
   -name TEST-*.xml -newer /tmp/NOW | wc -l))
 - echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
