@@ -5,7 +5,11 @@ before_cache:
 - cp /tmp/classpathFile $HOME/CACHE/classpathFile
 - cp /tmp/classpathFile $HOME/CACHE/classpathFile
 - cp /tmp/classpathFile $HOME/CACHE/classpathFile
+- cp /tmp/classpathFile $HOME/CACHE/classpathFile
 before_install:
+- if [ "$TRAVIS_OS_NAME" == "osx" ];        then sed -i '' 's/<gib.enabled>true/<gib.enabled>false/'
+  $TRAVIS_BUILD_DIR/pom.xml;        else sed -i 's/<gib.enabled>true/<gib.enabled>false/'
+  $TRAVIS_BUILD_DIR/pom.xml;        fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ];        then sed -i '' 's/<gib.enabled>true/<gib.enabled>false/'
   $TRAVIS_BUILD_DIR/pom.xml;        else sed -i 's/<gib.enabled>true/<gib.enabled>false/'
   $TRAVIS_BUILD_DIR/pom.xml;        fi
@@ -94,8 +98,14 @@ before_script:
   $TRAVIS_BUILD_DIR/pom.xml;        fi
 - if [[ -e $HOME/CACHE/classpathFile ]]; then cp $HOME/CACHE/classpathFile /tmp/;
   fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ];        then sed -i '' 's/<gib.enabled>false/<gib.enabled>true/'
+  $TRAVIS_BUILD_DIR/pom.xml;        else sed -i 's/<gib.enabled>false/<gib.enabled>true/'
+  $TRAVIS_BUILD_DIR/pom.xml;        fi
+- if [[ -e $HOME/CACHE/classpathFile ]]; then cp $HOME/CACHE/classpathFile /tmp/;
+  fi
 cache:
   directories:
+  - $HOME/CACHE
   - $HOME/CACHE
   - $HOME/CACHE
   - $HOME/CACHE
@@ -136,7 +146,10 @@ script:
 - touch /tmp/NOW;echo SCRIPT_START $(date)
 - touch /tmp/NOW;echo SCRIPT_START $(date)
 - touch /tmp/NOW;echo SCRIPT_START $(date)
+- touch /tmp/NOW;echo SCRIPT_START $(date)
 - mvn test -B
+- echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
+  -name TEST-*.xml -newer /tmp/NOW | wc -l))
 - echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
   -name TEST-*.xml -newer /tmp/NOW | wc -l))
 - echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
