@@ -150,6 +150,7 @@ cache:
   - $HOME/CACHE
   - $HOME/CACHE
   - $HOME/CACHE
+  - $HOME/CACHE
 env:
 - CACHE_MARK=1
 - CACHE_MARK=2
@@ -182,7 +183,10 @@ script:
 - touch /tmp/NOW;echo SCRIPT_START $(date)
 - touch /tmp/NOW;echo SCRIPT_START $(date)
 - touch /tmp/NOW;echo SCRIPT_START $(date)
+- touch /tmp/NOW;echo SCRIPT_START $(date)
 - mvn test -B
+- echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
+  -name TEST-*.xml -newer /tmp/NOW | wc -l))
 - echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
   -name TEST-*.xml -newer /tmp/NOW | wc -l))
 - echo SCRIPT_END $(date);echo TESTNUM $(grep -l "<testcase" $(find $TRAVIS_BUILD_DIR
